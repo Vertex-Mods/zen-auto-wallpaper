@@ -6,6 +6,8 @@ class ZenWallpapers {
   async init() {
     Services.scriptloader.loadSubScript("chrome://browser/content/setDesktopBackground.js", window);
     await this.waitForDependencies();
+    this.updateDesktopBg();
+    this.updateDesktopBg();
     gZenWorkspaces.addChangeListeners(this.updateDesktopBg.bind(this));
   }
 
@@ -49,15 +51,10 @@ class ZenWallpapers {
     // Temporary backup for proof of concept. Remove fallback when able to save images.
     return this.images[currWorkspaceId] ?? this.fallbackImg;
   }
-
-  valueToHex(color) {
-    const hex = color.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-  }
   
   rgbToHex(rgb) {
     const [ r, g, b ] = rgb.replace(/rgb\(|\)/g, "").split(", ");
-    return "#" + this.valueToHex(r) + this.valueToHex(g) + this.valueToHex(b);
+    return gSetBackground._rgbToHex(r, g, b);
   }
 
   updateDesktopBg() {
@@ -66,20 +63,16 @@ class ZenWallpapers {
     document.body.appendChild(fakeElement);
 
     const currImage = this.currImage;
-    console.log(JSON.stringify(currImage));
     if (!currImage) return;
   
     const image = document.createElement("img");
     image.src = currImage.src;
-    console.log(image);
     gSetBackground._image = image;
     
     gSetBackground._imageName = "Custom background";
     gSetBackground._position = currImage.position;
     gSetBackground._backgroundColor = currImage.bgColor ?? this.rgbToHex(document.documentElement.style.getPropertyValue("--zen-primary-color"));
-    console.log(currImage.bgColor ?? this.rgbToHex(document.documentElement.style.getPropertyValue("--zen-primary-color")));
     
-    console.log(JSON.stringify(gSetBackground));
     gSetBackground.setDesktopBackground();
 
     fakeElement.remove();
