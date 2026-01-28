@@ -5,7 +5,7 @@ class ZenWallpapers {
   }
 
   get images() {
-    const savedImages = SessionStore.getCustomWindowValue(window, "workspaceImages");
+    const savedImages = SessionStore.getCustomWindowValue(window, "workspaceImages") ?? "{}";
     return JSON.parse(savedImages);
   }
 
