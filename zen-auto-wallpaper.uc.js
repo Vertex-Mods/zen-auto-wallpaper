@@ -1,9 +1,7 @@
 class ZenWallpapers {
   constructor() {
     Services.scriptloader.loadSubScript("chrome://browser/content/setDesktopBackground.js", window);
-    
-    const callback = this.updateDesktopBg;
-    gZenWorkspaces.addChangeListeners(callback);
+    gZenWorkspaces.addChangeListeners(this.updateDesktopBg.bind(this));
   }
 
   get images() {
