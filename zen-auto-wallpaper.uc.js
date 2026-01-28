@@ -66,6 +66,7 @@ class ZenWallpapers {
     document.body.appendChild(fakeElement);
 
     const currImage = this.currImage;
+    console.log(currImage);
     if (!currImage) return;
   
     const image = document.createElement("img");
