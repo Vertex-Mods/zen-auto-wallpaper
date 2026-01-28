@@ -7,6 +7,7 @@ class ZenWallpapers {
     Services.scriptloader.loadSubScript("chrome://browser/content/setDesktopBackground.js", window);
     await this.waitForDependencies();
     gZenWorkspaces.addChangeListeners(() => this.updateDesktopBg());
+    this.addContextMenuItem();
   }
 
   waitForDependencies() {
@@ -27,6 +28,55 @@ class ZenWallpapers {
         }
       }, 50);
     });
+  }
+
+  addContextMenuItem() {
+    const contextMenu = document.getElementById("zenWorkspaceMoreActions");
+    if (!contextMenu) return;
+
+    const containerTabItem = document.getElementById("context_zenWorkspacesOpenInContainerTab");
+    if (!containerTabItem) return;
+
+    // Create the menu item
+    const menuItem = document.createXULElement("menuitem");
+    menuItem.id = "context_zenWorkspaceSetWallpaper";
+    menuItem.setAttribute("label", "Set Space Wallpaper");
+    menuItem.setAttribute("accesskey", "W");
+    
+    // Add click handler
+    menuItem.addEventListener("command", () => this.openWallpaperPicker());
+
+    // Insert after the container tab item
+    containerTabItem.parentNode.insertBefore(menuItem, containerTabItem.nextSibling);
+  }
+
+  async openWallpaperPicker() {
+    const fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
+    fp.init(window.browsingContext, "Select Wallpaper", Ci.nsIFilePicker.modeOpen);
+    
+    // Add image file filters
+    fp.appendFilter("Image Files", "*.jpg;*.jpeg;*.png;*.bmp;*.gif;*.webp");
+    fp.appendFilters(Ci.nsIFilePicker.filterAll);
+
+    const result = await new Promise(resolve => {
+      fp.open(resolve);
+    });
+
+    if (result === Ci.nsIFilePicker.returnOK) {
+      const fileURI = fp.fileURL.spec;
+      const activeWorkspace = gZenWorkspaces.getActiveWorkspace();
+      
+      // Store the wallpaper for this workspace
+      const images = this.images;
+      images[activeWorkspace.uuid] = {
+        src: fileURI,
+        position: "FILL"
+      };
+      this.images = images;
+
+      // Update the desktop background immediately
+      this.updateDesktopBg();
+    }
   }
 
   fallbackImg = {
