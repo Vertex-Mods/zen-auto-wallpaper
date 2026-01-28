@@ -71,12 +71,14 @@ class ZenWallpapers {
   
     const image = document.createElement("img");
     image.src = currImage.src;
+    console.log(image);
     gSetBackground._image = image;
     
     gSetBackground._imageName = "Custom background";
     gSetBackground._position = currImage.position;
     gSetBackground._backgroundColor = currImage.bgColor ?? this.rgbToHex(document.documentElement.style.getPropertyValue("--zen-primary-color"));
-
+    console.log(currImage.bgColor ?? this.rgbToHex(document.documentElement.style.getPropertyValue("--zen-primary-color")));
+    
     console.log(JSON.stringify(gSetBackground));
     gSetBackground.setDesktopBackground();
 
