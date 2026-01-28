@@ -55,7 +55,7 @@ class ZenWallpapers {
     return gSetBackground._rgbToHex(r, g, b);
   }
 
-  updateDesktopBg() {
+  async updateDesktopBg() {
     const fakeElement = document.createElement("div");
     fakeElement.id = "menuPosition";
     document.body.appendChild(fakeElement);
@@ -70,7 +70,8 @@ class ZenWallpapers {
     gSetBackground._imageName = "Custom background";
     gSetBackground._position = currImage.position;
     gSetBackground._backgroundColor = currImage.bgColor ?? this.rgbToHex(document.documentElement.style.getPropertyValue("--zen-primary-color"));
-    
+
+    await image.decode();
     gSetBackground.setDesktopBackground();
   }
 }
