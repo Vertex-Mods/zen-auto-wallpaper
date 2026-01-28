@@ -6,15 +6,13 @@ class ZenWallpapers {
   async init() {
     Services.scriptloader.loadSubScript("chrome://browser/content/setDesktopBackground.js", window);
     await this.waitForDependencies();
-    this.updateDesktopBg();
-    this.updateDesktopBg();
-    gZenWorkspaces.addChangeListeners(this.updateDesktopBg.bind(this));
+    gZenWorkspaces.addChangeListeners(() => this.updateDesktopBg());
   }
 
   waitForDependencies() {
     return new Promise((resolve) => {
       const id = setInterval(() => {
-        const deps = ["gZenWorkspaces"]
+        const deps = ["gZenWorkspaces", "gSetBackground"]
         
         let depsExist = true;
         for (const dep of deps) {
@@ -74,8 +72,6 @@ class ZenWallpapers {
     gSetBackground._backgroundColor = currImage.bgColor ?? this.rgbToHex(document.documentElement.style.getPropertyValue("--zen-primary-color"));
     
     gSetBackground.setDesktopBackground();
-
-    fakeElement.remove();
   }
 }
 
