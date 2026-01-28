@@ -73,6 +73,8 @@ class ZenWallpapers {
 
     await image.decode();
     gSetBackground.setDesktopBackground();
+
+    fakeElement.remove();
   }
 }
 
