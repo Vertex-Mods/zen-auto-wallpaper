@@ -4,6 +4,11 @@ class ZenWallpapers {
     gZenWorkspaces.addChangeListeners(this.updateDesktopBg.bind(this));
   }
 
+  fallbackImg = {
+    src: "file:///C:/Windows/Web/4K/Wallpaper/Windows/img19_1920x1200.jpg",
+    position: "FILL"
+  }
+
   get images() {
     const savedImages = SessionStore.getCustomWindowValue(window, "workspaceImages") || "{}";
     return JSON.parse(savedImages);
@@ -16,8 +21,8 @@ class ZenWallpapers {
 
   get currImage() {
     const currWorkspaceId = gZenWorkspaces.getActiveWorkspace().uuid;
-    // Temporary backup for proof of concept. Replace with empty string fallback when able to save images.
-    return this.images[currWorkspaceId] ?? "file:///C:/Windows/Web/4K/Wallpaper/Windows/img19_1920x1200.jpg";
+    // Temporary backup for proof of concept. Remove fallback when able to save images.
+    return this.images[currWorkspaceId] ?? this.fallbackImg;
   }
 
   valueToHex(color) {
@@ -34,16 +39,21 @@ class ZenWallpapers {
     const fakeElement = document.createElement("div");
     fakeElement.id = "menuPosition";
     document.body.appendChild(fakeElement);
+
+    const currImage = this.currImage;
+    if (!currImage) return;
   
     const image = document.createElement("img");
-    image.src = this.currImage;
+    image.src = currImage.src;
     gSetBackground._image = image;
-    gSetBackground._imageName = "Windows default dark wallpaper";
-  
-    gSetBackground._position = "FILL";
-    gSetBackground._backgroundColor = this.rgbToHex(document.documentElement.style.getPropertyValue("--zen-primary-color"));
+    
+    gSetBackground._imageName = "Custom background";
+    gSetBackground._position = currImage.position;
+    gSetBackground._backgroundColor = currImage.bgColor ?? this.rgbToHex(document.documentElement.style.getPropertyValue("--zen-primary-color"));
     
     gSetBackground.setDesktopBackground();
+
+    fakeElement.remove();
   }
 }
 
