@@ -41,7 +41,7 @@ class ZenWallpapers {
     gSetBackground._imageName = "Windows default dark wallpaper";
   
     gSetBackground._position = "FILL";
-    gSetBackground._backgroundColor = rgbToHex(document.documentElement.style.getPropertyValue("--zen-primary-color"));
+    gSetBackground._backgroundColor = this.rgbToHex(document.documentElement.style.getPropertyValue("--zen-primary-color"));
     
     gSetBackground.setDesktopBackground();
   }
