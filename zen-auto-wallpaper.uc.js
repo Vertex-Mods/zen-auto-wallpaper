@@ -1,7 +1,32 @@
 class ZenWallpapers {
   constructor() {
+    this.init();
+  }
+
+  async init() {
     Services.scriptloader.loadSubScript("chrome://browser/content/setDesktopBackground.js", window);
+    await this.waitForDependencies();
     gZenWorkspaces.addChangeListeners(this.updateDesktopBg.bind(this));
+  }
+
+  waitForDependencies() {
+    return new Promise((resolve) => {
+      const id = setInterval(() => {
+        const deps = ["gZenWorkspaces"]
+        
+        let depsExist = true;
+        for (const dep of deps) {
+          if (!window.hasOwnProperty(dep)) {
+            depsExist = false;
+          }
+        }
+
+        if (depsExist) {
+          clearInterval(id);
+          resolve();
+        }
+      }, 50);
+    });
   }
 
   fallbackImg = {
