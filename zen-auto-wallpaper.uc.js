@@ -81,6 +81,39 @@ class ZenWallpapers {
     return gSetBackground._rgbToHex(r, g, b);
   }
 
+  fileURLToDataURL(fileURL) {
+    // Create a channel for the file
+    const uri = Services.io.newURI(fileURL);
+    const channel = Services.io.newChannelFromURI(
+      uri,
+      null,
+      Services.scriptSecurityManager.getSystemPrincipal(),
+      null,
+      Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_SEC_CONTEXT_IS_NULL,
+      Ci.nsIContentPolicy.TYPE_OTHER
+    );
+
+    // Read file as binary
+    const inputStream = channel.open();
+    const binaryStream = Cc["@mozilla.org/binaryinputstream;1"].createInstance(
+      Ci.nsIBinaryInputStream
+    );
+    binaryStream.setInputStream(inputStream);
+
+    const bytes = binaryStream.readBytes(binaryStream.available());
+
+    binaryStream.close();
+    inputStream.close();
+
+    // Guess mime type from extension
+    let mime = "image/png";
+    if (fileURL.endsWith(".jpg") || fileURL.endsWith(".jpeg")) {
+      mime = "image/jpeg";
+    }
+
+    return `data:${mime};base64,${btoa(bytes)}`;
+  }
+
   async initUploadBtn() {
     const themePicker = await this.waitForElm(".zen-theme-picker-gradient");
 
@@ -101,10 +134,11 @@ class ZenWallpapers {
       upload.addEventListener("change", () => {
         const systemPath = upload.files[0].mozFullPath;
         const fileURI = Services.io.newFileURI(new FileUtils.File(systemPath)).spec;
+        const dataURI = this.fileURLToDataURL(fileURI);
 
         const images = this.images;
         images[this.activeWorkspaceId] = {
-          src: fileURI,
+          src: dataURI,
           position: "FILL",
         };
         this.images = images;
