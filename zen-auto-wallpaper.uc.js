@@ -116,7 +116,7 @@ class ZenWallpapers {
 
   setDesktopBackground() {
     gSetBackground.setDesktopBackground();
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const img = gSetBackground._image;
 
       if (img.complete && img.naturalWidth !== 0) {
