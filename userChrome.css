@@ -1,1 +1,21 @@
+#wallpaper-upload-btn {
+  position: absolute;
+  right: 15px;
+  z-index: 2;
+  top: 15px;
+  border: none !important;
+  padding: 0 !important;
+  transition: background 0.2s;
+  appearance: none !important;
+  min-height: 30px !important;
+  min-width: 30px !important;
+  list-style-image: url("chrome://sine/content/zen-auto-wallpaper/upload.svg");
+}
 
+#wallpaper-upload-btn image {
+    width: 65%;
+}
+
+#wallpaper-upload-btn:hover {
+    background: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1)) !important;
+}
