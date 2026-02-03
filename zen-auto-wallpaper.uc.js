@@ -52,11 +52,6 @@ class ZenWallpapers {
     });
   }
 
-  fallbackImg = {
-    src: "file:///C:/Windows/Web/4K/Wallpaper/Windows/img19_1920x1200.jpg",
-    position: "FILL",
-  };
-
   get activeWorkspaceId() {
     return gZenWorkspaces.getActiveWorkspace().uuid;
   }
@@ -72,8 +67,7 @@ class ZenWallpapers {
   }
 
   get currImage() {
-    // Temporary backup for proof of concept. Remove fallback when able to save images.
-    return this.images[this.activeWorkspaceId] ?? this.fallbackImg;
+    return this.images[this.activeWorkspaceId];
   }
 
   rgbToHex(rgb) {
