@@ -11,7 +11,7 @@
       "include": ["chrome://browser/content/browser.xhtml"]
     }
   },
-  "version": "0.1.0",
+  "version": "0.2.0",
   "createdAt": "2026-01-28",
-  "updatedAt": "2026-01-28"
+  "updatedAt": "2026-02-04"
 }
