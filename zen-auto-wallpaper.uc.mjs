@@ -10,6 +10,13 @@ class ZenWallpapers {
     this.initUploadBtn();
   }
 
+  unload() {
+    gZenWorkspaces.removeChangeListeners(() => this.updateDesktopBg());
+    document.getElementById("wallpaper-upload-btn").remove();
+    delete window.gSetBackground;
+    delete window.gZenWallpapers;
+  }
+
   waitForDependencies() {
     return new Promise((resolve) => {
       const id = setInterval(() => {
@@ -181,6 +188,12 @@ class ZenWallpapers {
 
     gZenThemePicker.onWorkspaceChange(gZenWorkspaces.getActiveWorkspace());
   }
+}
+
+if (window.addUnloadListener) {
+  window.addUnloadListener(() => {
+    gZenWallpapers.unload();
+  });
 }
 
 if (document.readyState === "complete") {
