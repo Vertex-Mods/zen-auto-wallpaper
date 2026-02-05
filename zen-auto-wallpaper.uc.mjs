@@ -5,7 +5,7 @@ class ZenWallpapers {
 
   async init() {
     Services.scriptloader.loadSubScript("chrome://browser/content/setDesktopBackground.js", this);
-    window.addUnloadListener(this.unload);
+    window.addUnloadListener(this.unload.bind(this));
     await this.waitForDependencies();
     gZenWorkspaces.addChangeListeners(this.updateDesktopBg.bind(this));
     this.initUploadBtn();
