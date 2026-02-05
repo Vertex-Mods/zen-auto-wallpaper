@@ -7,12 +7,12 @@ class ZenWallpapers {
     Services.scriptloader.loadSubScript("chrome://browser/content/setDesktopBackground.js", this);
     window.addUnloadListener(this.unload);
     await this.waitForDependencies();
-    gZenWorkspaces.addChangeListeners(this.updateDesktopBg);
+    gZenWorkspaces.addChangeListeners(this.updateDesktopBg.bind(this));
     this.initUploadBtn();
   }
 
   unload() {
-    gZenWorkspaces.removeChangeListeners(this.updateDesktopBg);
+    gZenWorkspaces.removeChangeListeners(this.updateDesktopBg.bind(this));
     document.getElementById("wallpaper-upload-btn").remove();
     delete window.gZenWallpapers;
   }
