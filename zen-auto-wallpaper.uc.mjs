@@ -4,7 +4,7 @@ class ZenWallpapers {
   }
 
   async init() {
-    Services.scriptloader.loadSubScript("chrome://browser/content/setDesktopBackground.js", window);
+    Services.scriptloader.loadSubScript("chrome://browser/content/setDesktopBackground.js", this);
     await this.waitForDependencies();
     gZenWorkspaces.addChangeListeners(() => this.updateDesktopBg());
     this.initUploadBtn();
@@ -13,7 +13,6 @@ class ZenWallpapers {
   unload() {
     gZenWorkspaces.removeChangeListeners(() => this.updateDesktopBg());
     document.getElementById("wallpaper-upload-btn").remove();
-    delete window.gSetBackground;
     delete window.gZenWallpapers;
   }
 
@@ -24,7 +23,7 @@ class ZenWallpapers {
 
         let depsExist = true;
         for (const dep of deps) {
-          if (!window.hasOwnProperty(dep)) {
+          if (!this.hasOwnProperty(dep) && !window.hasOwnProperty(dep)) {
             depsExist = false;
           }
         }
@@ -79,7 +78,7 @@ class ZenWallpapers {
 
   rgbToHex(rgb) {
     const [r, g, b] = rgb.replace(/rgb\(|\)/g, "").split(", ");
-    return gSetBackground._rgbToHex(r, g, b);
+    return this.gSetBackground._rgbToHex(r, g, b);
   }
 
   fileURLToDataURL(fileURL) {
@@ -150,9 +149,9 @@ class ZenWallpapers {
   }
 
   setDesktopBackground() {
-    gSetBackground.setDesktopBackground();
+    this.gSetBackground.setDesktopBackground();
     return new Promise((resolve) => {
-      const img = gSetBackground._image;
+      const img = this.gSetBackground._image;
 
       if (img.complete && img.naturalWidth !== 0) {
         resolve();
@@ -173,11 +172,11 @@ class ZenWallpapers {
 
     const image = document.createElement("img");
     image.src = currImage.src;
-    gSetBackground._image = image;
+    this.gSetBackground._image = image;
 
-    gSetBackground._imageName = "Custom background";
-    gSetBackground._position = currImage.position;
-    gSetBackground._backgroundColor =
+    this.gSetBackground._imageName = "Custom background";
+    this.gSetBackground._position = currImage.position;
+    this.gSetBackground._backgroundColor =
       currImage.bgColor ??
       this.rgbToHex(document.documentElement.style.getPropertyValue("--zen-primary-color"));
 
