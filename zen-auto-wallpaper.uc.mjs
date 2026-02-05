@@ -190,9 +190,7 @@ class ZenWallpapers {
 }
 
 if (window.addUnloadListener) {
-  window.addUnloadListener(() => {
-    gZenWallpapers.unload();
-  });
+  window.addUnloadListener(gZenWallpapers.unload);
 }
 
 if (document.readyState === "complete") {
