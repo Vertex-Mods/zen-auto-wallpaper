@@ -5,6 +5,7 @@ class ZenWallpapers {
 
   async init() {
     Services.scriptloader.loadSubScript("chrome://browser/content/setDesktopBackground.js", this);
+    window.addUnloadListener(this.unload);
     await this.waitForDependencies();
     gZenWorkspaces.addChangeListeners(() => this.updateDesktopBg());
     this.initUploadBtn();
@@ -187,10 +188,6 @@ class ZenWallpapers {
 
     gZenThemePicker.onWorkspaceChange(gZenWorkspaces.getActiveWorkspace());
   }
-}
-
-if (window.addUnloadListener) {
-  window.addUnloadListener(gZenWallpapers.unload);
 }
 
 if (document.readyState === "complete") {
